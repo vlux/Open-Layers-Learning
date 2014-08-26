@@ -1,0 +1,33 @@
+<DOCTYPE html>
+<html>
+<head>
+    <title>Double Layers</title>
+    <meta charset = 'utf-8' />
+    <script type = "text/javascript" src ="OpenLayers.js"></script>
+    <script type = "text/javascript">
+        var map;
+        function init(){
+            map = new OpenLayers.Map('map',{});
+            var wms = new OpenLayers.Layer.WMS(
+                'Basic Layer',
+                'http://vmap0.tiles.osgeo.org/wms/vmap0',
+                {layer:'basice'},
+                {isBaseLayer:true}
+            );
+            var wms2 = new OpenLayers.Layer.WMS(
+                'Location Labels',
+                'http://vmap0.tiles.osgeo.org/wms/vmap0',
+                { layers: 'clabel,ctylabel,statelabel', transparent: true },
+                { opacity: 1 }
+            ) ;
+            map.addLayers([wms,wms2]);
+            if(!map.getCenter())
+                map.zoomToMaxExtent();
+        };
+    </script>
+</head>
+<body onload ="init()">
+    <div id = 'map',style='width:1000px;height:1000px;'>
+    </div>
+</body>
+</html>

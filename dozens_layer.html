@@ -1,0 +1,56 @@
+<DOCTYPE html>
+<html>
+<head>
+    <title>Double Layers</title>
+    <meta charset = 'utf-8' />
+    <script type = "text/javascript" src ="OpenLayers.js"></script>
+    <script type = "text/javascript">
+        var map;
+        var zoom = 7;
+        var lat = 40;
+        var lon = 120;
+        function init(){
+            map = new OpenLayers.Map('map',{});
+
+            var wms1 = new OpenLayers.Layer.WMS(
+                'Basic Layer',
+                'http://vmap0.tiles.osgeo.org/wms/vmap0',
+                {layers:'basic'},
+                {isBaseLayer:true}
+            );
+            var wms2 = new OpenLayers.Layer.WMS(
+                'Location Labels',
+                'http://vmap0.tiles.osgeo.org/wms/vmap0',
+                { layers: 'clabel,ctylabel,statelabel', transparent: true },
+                { visibility: false, opacity: .5 }
+            ) ;
+            var wms3 = new OpenLayers.Layer.WMS(
+                'State Line Layer',
+                'http://labs.metacarta.com/wms/vmap0',
+                { layers: 'stateboundary', transparent: true },
+                { displayInLayerSwitcher: false, minScale: 13841995.078125 }
+            );
+            var wms4 = new OpenLayers.Layer.WMS(
+                'Water Depth',
+                'http://labs.metacarta.com/wms/vmap0',
+                { layers: 'depthcontour', transparent: true },
+                { opacity:.5}
+            );
+            var wms5 = new OpenLayers.Layer.WMS(
+                'Roads',
+                'http://labs.metacarta.com/wms/vmap0',
+                { layers: 'priroad,secroad,rail', transparent: true},
+                { transitionEffect:'resize'}
+            );
+
+            map.addLayers([wms1,wms2,wms3,wms4,wms5]);
+            map.setCenter(new OpenLayers.LonLat(lon,lat),zoom);
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+        }
+    </script>
+</head>
+<body onload ="init()">
+    <div id = 'map',style='width:1000px;height:1000px;'>
+    </div>
+</body>
+</html>

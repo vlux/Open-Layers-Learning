@@ -11,13 +11,12 @@
             var wms = new OpenLayers.WMS(
                 'OpenLayers WMS',
                 'http://vmap0.tiles.osgeo.org/wms/vmap0',
-                {layer: 'basic'},
+                {layers: 'basic'},
                 {}
             );
-            map.addLayer(wms);
-            if(!map.getCenter()){
+            map.addLayers(wms);
+            if(!map.getCenter())
                 map.zoomToMaxExtent();
-            }
         }
     </script>
 </head>

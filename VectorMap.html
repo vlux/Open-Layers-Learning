@@ -1,0 +1,43 @@
+<DOCTYPE html>
+<html>
+<head>
+    <title>Vector Maps</title>
+    <meta charset = 'utf-8' />
+    <script type = "text/javascript" src ="OpenLayers.js"></script>
+    <script type = "text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" >
+    function init(){
+    var map = new OpenLayers.Map(
+    		'map',
+    		{
+    			progection:new OpenLayers.Projection('EPSG:900913'),
+    			displayProgection:new OpenLayers.Projection('EPSG:4326'),
+    			maxExtent:new OpenLayers.Bounds(-20037508,-20037508,20037508,20037508.34),
+    			maxResolution:156543.0339,
+    			uints:'m'
+    		}
+    	);
+    	var google_street=new OpenLayers.Layer.Google(
+    		'Google street',
+            {numZoomLevels: 20}
+    	);
+    	var wms_layer=new OpenLayers.Layer.WMS(
+    		'OpenLayer WMS',
+    		'http://vmap0.tiles.osgeo.org/wms/vmap0',
+    		{layers:'basic,clabel,ctylabel,statelabel', transparent:true},
+    		{isBaseLayer:false,opacity:.5}
+    	);
+    	var vector_layer=new OpenLayers.Layer.Vector(
+    		'editable vector'
+    	);
+    	map.addControl(new OpenLayers.Control.EditingToolbar(vector_layer));
+    	map.addControl(new OpenLayers.Control.LayerSwitcher({}));
+    	map.addLayers([google_street,wms_layer,vector_layer]);
+    }
+</script>
+</head>
+<body onload = "init()">
+    <div id ="map" style= "width:1700px;height:700px;alignment-adjust:central">
+    </div>
+</body>
+</html>

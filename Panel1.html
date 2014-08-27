@@ -1,0 +1,94 @@
+<DOCTYPE html>
+<html>
+<head>
+    <title>Panel1 Maps</title>
+    <meta charset = 'utf-8' />
+    <script type = "text/javascript" src ="OpenLayers.js"></script>
+    <script type = "text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" >
+        function init(){
+        var navigation_control = new OpenLayers.Control.Navigation({});
+        var panel_control = new OpenLayers.Control.Panel(
+            {
+                div:document.getElementById('panel_div'),
+                defaultControl:navigation_control
+            }
+        );
+        panel_control.addControls(
+            [
+                navigation_control,
+                new OpenLayers.Control.ZoomBox(),
+                new OpenLayers.Control.ZoomToMaxExtent()
+            ]
+        );
+
+        var map = new OpenLayers.Map(
+                'map',
+                {
+                    controls:[panel_control],
+                    progection:new OpenLayers.Projection('EPSG:900913'),
+                    displayProgection:new OpenLayers.Projection('EPSG:4326'),
+                    maxExtent:new OpenLayers.Bounds(-20037508,-20037508,20037508,20037508.34),
+                    maxResolution:156543.0339,
+                    uints:'m'
+                }
+            );
+
+        var google_street=new OpenLayers.Layer.Google(
+                'Google street',
+                {numZoomLevels: 20}
+            );
+
+        var wms_layer=new OpenLayers.Layer.WMS(
+                'OpenLayer WMS',
+                'http://vmap0.tiles.osgeo.org/wms/vmap0',
+                {layers:'basic,clabel,ctylabel,statelabel', transparent:true},
+                {isBaseLayer:false,opacity:.5}
+            );
+
+        var vector_layer=new OpenLayers.Layer.Vector(
+                'editable vector'
+            );
+
+        map.addControl(new OpenLayers.Control.EditingToolbar(vector_layer));
+        map.addControl(new OpenLayers.Control.LayerSwitcher({}));
+        map.addLayers([google_street,wms_layer,vector_layer]);
+
+        if(!map.getCenter())
+            map.zoomToMaxExtent();
+
+}
+</script>
+<style>
+    #panel_div .olControlNavigationItemActive{
+        background:#4aa1d3 url(img/pan_on.png);
+        width:22px;
+        height:22px;
+    }
+    #panel_div .olControlNavigationItemInactive{
+        background:#996622 url(img/pan_off.png);
+        width:22px;
+        height:22px;
+    }
+    #panel_div .olControlZoomBoxItemInactive{
+        background:#999933 url(img/drag-rectangle-off.png);
+        width:22px;
+        height:22px;
+    }
+    #panel_div .olControlZoomBoxItemActive{
+        background:#999966 url(img/drag-rectangle-on.png);
+        width:22px;
+        height:22px;
+    }
+    #panel_div .olControlZoomToMaxExtentItemInactive{
+        background:#333399 url(img/zoom-world-mini.png);
+        width:18px;
+        height:18px;
+    }
+</style>
+</head>
+<body onload = "init()">
+    <div id ="panel" ></div>
+    <div id ="map" style= "width:1700px;height:700px;alignment-adjust:central"></div>
+</body>
+</html>

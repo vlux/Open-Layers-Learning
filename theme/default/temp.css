@@ -1,0 +1,47 @@
+/* CSS Document */
+.olControlScaleLine{
+	background:#777777;
+	color:#ffffff;
+}
+.olControlNavToolbar{
+	top:0;
+}
+.olControlNavigationItemInactive{
+	background:#787878 !important;
+	border:2px solid #306;
+	cursor:pointer;
+	left:0 !important;
+	top:0 !important;
+}
+.olControlNavigationItemActive{
+	background:#dedede !important;
+	border:2px solid #787878;
+	cursor:pointer;
+	left:0 !important;
+	top:0 !important;
+}
+.olControlZoomBoxItemInactive{
+	background:#336699 !important;
+	border:1px solid #232323;
+	cursor:pointer;
+	left:0 !important;
+	top:0 !important;
+}
+.olControlZoomBoxItemActive{
+	background:#77aadd !important;
+	border:1px solid #5588aa;
+	cursor:pointer;
+	left:0 !important;
+	top:0 !important;
+}
+.olControlOverviewMapMaximizeButton,.olControlOverviewMapMinimizeButton{
+	buttom:0  !important;
+}
+.olControlOverviewMapElement{
+	background:#cdcdcd !important;
+}
+.olControlOverviewMapExtentRectangle{
+	background:rgba(60,90,120,0.7);
+	border:1px solid #22dd22 !important;
+
+}

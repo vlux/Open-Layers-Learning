@@ -1,0 +1,27 @@
+<DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps</title>
+    <meta charset = 'utf-8' />
+    <script type = "text/javascript" src ="OpenLayers.js"></script>
+    <script type = "text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type = "text/javascript">
+        var map;
+        var wms;
+        function init(){
+        map = new OpenLayers.Map('map',{});
+        wms = new OpenLayers.Layer.Google(
+                'Base Layer',
+                { type : google.maps.MapTypeId.HYBRID}
+            );
+        map.addLayer(wms);
+        if(!map.getCenter())
+            map.zoomToMaxExtent();
+        }
+    </script>
+</head>
+<body onload = "init()">
+    <div id ="map" style= "width:1700px;height:700px;">
+    </div>
+</body>
+</html>

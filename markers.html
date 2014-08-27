@@ -1,0 +1,109 @@
+<html>
+<head>
+	<title>Text</title>
+	<script type="text/javascript" src="OpenLayers.js"></script>
+	<script type="text/javascript">
+		var map = null;
+		var markers = null;
+		var vectorLayer=null;
+		function init(){
+
+			<!-- create map -->
+			var options={
+				controls:[new OpenLayers.Control.KeyboardDefaults()]
+			};
+			map = new OpenLayers.Map('map',options);
+			var bounds = new OpenLayers.Bounds();
+			bounds.extend(new OpenLayers.LonLat(0,0));
+			bounds.extend(new OpenLayers.LonLat(500,500));
+			bounds.toBBOX();
+			var size = new OpenLayers.Size(400,400);
+			var wms = new OpenLayers.Layer.Image('b','img/maptest.jpg',bounds,size);
+
+			map.addLayer(wms);
+			map.setBaseLayer(wms);
+			map.zoomToMaxExtent();
+
+			<!-- add mapControl tools -->
+			map.addControl(new OpenLayers.Control.PanZoomBar({
+				position:new OpenLayers.Pixel(2,15)
+			}));
+			map.addControl(new OpenLayers.Control.ScaleLine());
+			map.addControl(new OpenLayers.Control.OverviewMap());
+			map.addControl(new OpenLayers.Control.Navigation());
+
+			<!-- create textLayers -->
+			var style = new OpenLayers.Style({
+				label:"${type}",
+				fontColor:"#289E08",
+				fontFamily:"sans-serif",
+				fontWeight:"bold",
+				fontSize:30
+			});
+
+			var point = new OpenLayers.Geometry.Point(126,262);
+
+			vectorLayer = new OpenLayers.Layer.Vector("labelLayer",{
+				styleMap:new OpenLayers.StyleMap(style)
+			});
+
+			var feature = new OpenLayers.Feature.Vector(point);
+
+			feature.attributes={
+				type:"Hello",
+				fontColor:"#7C99E2"
+			};
+			var feature = [feature];
+			map.addLayer(vectorLayer);
+			vectorLayer.addFeatures(feature);
+
+			<!-- create markerLayers -->
+			markers = new OpenLayers.Layer.Markers("Hello");
+			var lls = [[112,252],[86,34],[150,350],[100,200],[450,300]];
+			for(var i=0;i<lls.length;i++){
+				var arr = lls[i];
+				var lonlat = new OpenLayers.LonLat(arr[0],arr[1]);
+				markers = autoAddMarker(lonlat,i);
+			}
+			map.addLayer(markers);
+		}
+
+		function getIcon(){
+			var size = new OpenLayers.Size(21,25);
+			var offset = new OpenLayers.Pixel(-(size.w/2),-size.h);
+			var icon = new OpenLayers.Icon('img/marker.png',size,offset);
+			return icon;
+		}
+
+		function autoAddMarker(lonlat,i){
+			var marker = new OpenLayers.Marker(lonlat,getIcon());
+			marker.events.register("click", marker, function(evt){
+				evt = getEvt(i);
+                window.location.href=evt+".html";
+            });
+			markers.addMarker(marker);
+			return markers;
+		}
+
+		function getEvt(i){
+			var evt=null;
+			if(i == 0)
+				evt="Test2";
+			else if(i == 1)
+				evt="Test3";
+			else if(i == 2)
+				evt="Test4";
+			else if(i == 3)
+				evt="Test5";
+			else if(i == 4)
+				evt="Test6";
+			return evt;
+		}
+	</script>
+</head>
+
+
+<body onload="init()">
+	<div id="map" style="width:500px;height:500px;"></div>
+</body>
+</html>

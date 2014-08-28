@@ -1,15 +1,4 @@
-function init() {
-    map = new OpenLayers.Map('map');
 
-    click_layer = new OpenLayers.Layer.OSM(
-    "OSM", 
-    "http://211.87.224.138:81/osm_tiles/${z}/${x}/${y}.png",
-    {
-        crossOriginKeyword: null
-    }
-    );
-    map.addLayer(layer);
-    map.setCenter(new OpenLayers.LonLat(lon, lat), zoom);
     var featurecollection = {
         "type": "FeatureCollection",
         "features": [
@@ -27,51 +16,41 @@ function init() {
         ]
     };
 
-
-    var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
-    renderer = (renderer) ? [renderer]
-    : OpenLayers.Layer.Vector.prototype.renderers;
-
     var geojson_format = new OpenLayers.Format.GeoJSON();
-    var vector_layer = new OpenLayers.Layer.Vector("ss", {
-        styleMap: new OpenLayers.StyleMap({
+    var click_vector_layer = new OpenLayers.Layer.Vector(
+        "Click The Layer to choose the country",
+        {
+            styleMap: new OpenLayers.StyleMap({
             strokeColor: "#00FF00",
             strokeWidth: 3,
             pointRadius: 6,
             pointerEvents: "visiblePainted",
             fillOpacity: 0,
             cursor: "pointer"
-
         }),
-        renderers: renderer,
-
-
+            renderers: renderer
     });
-    map.addLayer(vector_layer);
+    map.addLayer(click_vector_layer);
 
+    var Read_GeoJson = geojson_format.read(featurecollection);
+    Read_GeoJson[0].geometry.transform(WGS_Projection, Mercator_Projection);
+    click_vector_layer.addFeatures(Read_GeoJson);
 
-    var test = geojson_format.read(featurecollection);
-    test[0].geometry.transform(WGS_Projection, Mercator_Projection);
-    vector_layer.addFeatures(test);
-
-    var select_control;
-    select_control = new OpenLayers.Control.SelectFeature(vector_layer, {
+    var select_control = new OpenLayers.Control.SelectFeature(click_vector_layer, {
         onClick: true,
-        onSelect: onFeatureSelect,
-        onUnselect: onFeatureUnselect
-
+        onSelect: onCountrySelect,
+        onUnselect: onCountryUnselect
     });
+
     map.addControl(select_control);
     select_control.activate();
-}
 
-    function onFeatureSelect(feature) {
-        console.log(feature.fid);
-        redrawTimeline(feature.fid);
+    function onCountrySelect(feature) {
+        //redrawTimeline(feature.fid);            //写过来的方法放到这里
         alert(feature.fid);
-
     }
+
     // Feature取消选中事件响应
-    function onFeatureUnselect(feature) {
-        alert("bad");
+    function onCountryUnselect(feature) {
+        alert("nope");
     }

@@ -24,8 +24,8 @@ function init() {
     map = new OpenLayers.Map('map');
 
     click_layer = new OpenLayers.Layer.OSM(
-    "OSM", 
-    "http://211.87.224.138:81/osm_tiles/${z}/${x}/${y}.png", 
+    "OSM",
+    "http://211.87.224.138:81/osm_tiles/${z}/${x}/${y}.png",
     {
         crossOriginKeyword: null
     }
@@ -52,8 +52,7 @@ function init() {
 
 
     var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
-    renderer = (renderer) ? [renderer]
-    : OpenLayers.Layer.Vector.prototype.renderers;
+    renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
     var geojson_format = new OpenLayers.Format.GeoJSON();
     var vector_layer = new OpenLayers.Layer.Vector("ss", {

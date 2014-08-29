@@ -46,6 +46,7 @@
     map.addControl(select_control);
     select_control.activate();
 
+    // Feature选中事件响应
     function onCountrySelect(feature) {
         //redrawTimeline(feature.fid);            //写过来的方法放到这里
         alert(feature.fid);

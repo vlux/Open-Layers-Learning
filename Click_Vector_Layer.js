@@ -20,14 +20,15 @@
     var click_vector_layer = new OpenLayers.Layer.Vector(
         "Click The Layer to choose the country",
         {
-            styleMap: new OpenLayers.StyleMap({
-            strokeColor: "#00FF00",
-            strokeWidth: 3,
-            pointRadius: 6,
-            pointerEvents: "visiblePainted",
-            fillOpacity: 0,
-            cursor: "pointer"
-        }),
+            styleMap: new OpenLayers.StyleMap(
+                {
+                    strokeColor: "rgba(0, 234, 255, 0.69)",
+                    strokeWidth: 3,
+                    pointRadius: 6,
+                    pointerEvents: "visiblePainted",
+                    fillOpacity: 0,
+                    cursor: "pointer"
+                }),
             renderers: renderer
     });
     map.addLayer(click_vector_layer);

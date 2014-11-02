@@ -1,0 +1,210 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+	<title>GPS Visualizer: Freehand Drawing Utility: Draw on a map and save GPX data</title>
+	<base target="_top"></base>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="/gpsv.css" type="text/css"></link>
+	<script type="text/javascript">
+		function GV_Import_Uploaded_Data(file) { GVS.Import_Uploaded_Data(file); }
+	</script>
+</head>
+
+<body style="margin:0px;">
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&amp;libraries=geometry&amp;sensor=false&amp;key=AIzaSyCZpN8qFnUrsYSj44DD6N6TTx-voLQ6Bgg"></script>
+
+	<style type="text/css">
+		td.toolbar_button { font:9px Verdana; line-height:9px; text-align:center; width:31px; height:29px; padding:0px 0px 0px 0px; margin:0px; }
+		td.toolbar_button img { cursor:pointer; width:25px; height:25px; padding:0px; border:1px solid #999999; margin:1px; }
+		td.toolbar_label { font:9px Verdana; line-height:9px; text-align:center; padding:0px; }
+	</style>
+
+	<div style="margin-left:0px; margin-right:0px; margin-top:0px; margin-bottom:0px;">
+		
+		<div id="gmap_div" style="width:100%; height:100%; margin:0px; background-color:#F0F0F0; overflow:hidden;">
+			<p align="center" style="font:10px Arial;">This map was created using <a target="_blank" href="http://www.gpsvisualizer.com/">GPS Visualizer</a>'s do-it-yourself geographic utilities.<br /><br />Please wait while the map loads...</p>
+		</div>
+
+		<div id="gv_infobox" class="gv_infobox" style="font:11px Arial; border:solid #666666 1px; background:#ffffff; padding:4px; overflow:auto; max-width:400px; display:none;">
+		</div>
+
+		<div id="gv_searchbox" align="left" style="font:10px Verdana; border:solid #666666 1px; background:#eeffe8; padding:6px 4px 2px 4px; width:220px; overflow:auto; display:none;">
+			<a href="http://www.gpsvisualizer.com/" id="gpsvisualizer_home_link">
+				<img src="/images/gpsvisualizer_200x32.gif" alt="GPS Visualizer" border="0" />
+			</a>
+			<h4 style="margin:2px 0px 0px 0px;" id="sandbox_title">Freehand Drawing Utility</h4>
+			<h5 style="margin:0px 0px 4px 0px;" id="sandbox_subtitle">("The Sandbox")</h5>
+			<p style="margin:0px 0px 0px 0px; font-size:10px; line-height:12px;" id="sandbox_description">Use the toolbar on the right to add waypoint markers and tracks, then click one of the "save data" buttons to download as plain text, GPX, or Google Earth KML.</p>
+			<p style="margin:8px 0px 2px 0px; font-size:10px; line-height:12px;">Center the map on a location:</p>
+			<p style="margin:0px 0px 0px 0px;">
+				<input id="gv_searchbox_input" type="text" size="20" />
+				<input id="gv_searchbox_button" type="button" value="Go" style="font:10px Verdana;" onclick="GV_Center_On_Address({input_box:'gv_searchbox_input',button:'gv_searchbox_button',message_box:'gv_searchbox_message',found_template:'',unfound_template:'',zoom:true,save_position:false});" />
+			</p>
+			<div style="margin:4px 0px 0px 0px; font-size:9px;">
+				<span style="font:10px Arial;" id="gv_searchbox_message">
+				</span>
+			</div>
+		</div>
+
+		<div id="gv_elements" align="left" style="width:200px; overflow:hidden; z-index:9997; border:solid #666666 1px; background:white; padding:4px; display:none;">
+			<p style="margin:0px 0px 4px 0px; font-size:10px;"><b>Drawing tools:</b></p>
+			<table cellspacing="0" cellpadding="0" border="0" id="gv_drawing_toolbar">
+				<tr valign="top">
+					<td align="center" class="toolbar_button">
+						<img id="gv_button_pan" src="images/button_pan.png"  title="Return to pan/zoom mode" />
+					</td>
+					<td align="center" rowspan="2" style="width:6px; padding:0px;"></td>
+					<td align="center" class="toolbar_button">
+						<img id="gv_button_add_wpt" src="images/button_add_wpt.png"  title="Add a marker to the map" />
+					</td>
+					<td align="center" class="toolbar_button">
+						<img id="gv_button_add_trk"  src="images/button_add_trk.png"  title="Add a track/line to the map" />
+					</td>
+					<td align="center" rowspan="2" style="width:6px; padding:0px;"></td>
+					<td align="center" class="toolbar_button">
+						<img id="gv_button_save_txt"  src="images/button_save_txt.png" title="Save the current data as a plain-text file" />
+					</td>
+					<td align="center" class="toolbar_button">
+						<img id="gv_button_save_gpx" src="images/button_save_gpx.png" title="Save the current data as a GPX file" />
+					</td>
+					<td align="center" class="toolbar_button">
+						<img id="gv_button_save_kml"   src="images/button_save_kml.png"   title="Save the current data as a KML file" />
+					</td>
+				</tr>
+				<tr valign="top">
+					<td align="center" class="toolbar_label">pan</td>
+					<td align="center" class="toolbar_label">wpt</td>
+					<td align="center" class="toolbar_label">trk</td>
+					<td align="center" class="toolbar_label" colspan="3">save data</td>
+				</tr>
+			</table>
+
+			<iframe id="download_iframe" style="background:none; width:208px; height:0px; margin:8px 0px 0px 0px; padding:0px;" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0"></iframe>
+
+			<p style="margin:4px 0px 4px 0px; font-size:10px;">
+				<b>Your map elements:</b> 
+				<a href="javascript:void(0)" onclick="GVS.Autozoom();">
+					<img src="http://maps.gpsvisualizer.com/google_maps/tracklist_goto.gif" width="9" height="9" border="0" style="vertical-align:-1px;" title="Zoom to your tracks &amp; waypoints">
+				</a>
+			</p>
+
+			<div id="gv_elements_list" style="padding:2px; min-height:20px; max-height:240px; overflow:auto;">
+				<!-- [list of drawn elements will go here] -->
+			</div>
+
+
+			<div style="margin:6px 0px 0px 0px; font-size:10px; background-color:#eeffe8;">
+				<table cellspacing="0" cellpadding="0" border="0" width="100%">
+				<tr valign="top">	
+					<td align="left">
+					<a href="javascript:void(0)" style="cursor:pointer; font:10px Verdana;" onclick="if($('import_iframe').style.display=='block'&&$('import_iframe').src.match(/import.html$/)){$('import_iframe').style.display='none';}else{$('import_iframe').src='import.html';$('import_iframe').style.display='block';}">Import a GPS file</a>
+					</td>
+
+					<td align="right">
+					<a href="javascript:void(0)" style="cursor:pointer; font:10px Verdana;" onclick="if($('import_iframe').style.display=='block'&&$('import_iframe').src.match(/url=1$/)){$('import_iframe').style.display='none';}else{$('import_iframe').src='import.html?url=1';$('import_iframe').style.display='block';}">Import a URL</a>
+					</td>
+				</tr>
+				</table>
+				<iframe id="import_iframe" style="display:none; background:none; width:208px; max-height:50px; overflow:auto; margin:8px 0px 0px 0px; padding:0px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
+			</div>
+
+		</div>
+
+		<div id="gv_sandbox_link" style="display:none; font:10px Verdana,sans-serif; padding:1px; background-color:#ffffff; filter:alpha(opacity=80); -moz-opacity:0.80; opacity:0.80; display:none;">
+			<a href="javascript:void(0)" onclick="Sandbox_Show_Link();">Link to this view</a>
+		</div>
+
+	</div>
+
+	<!-- begin GPS Visualizer setup script (must come after maps.google.com code) -->
+	<script type="text/javascript">
+		mobile_browser = (navigator.userAgent.match(/\b(Android|Blackberry|IEMobile|iPhone|iPad|iPod|Opera Mini|webOS)\b/i) || screen.width < 480 || screen.height < 480) ? true : false;
+
+		/* Global variables used by the GPS Visualizer functions: */
+		gv_options = {};
+
+		// basic map parameters:
+		gv_options.center = [30,-30];  // [latitude,longitude] - be sure to keep the square brackets
+		gv_options.zoom = 2;  // higher number means closer view; can also be 'auto'
+		gv_options.map_type = 'GV_HYBRID';  // popular map_type choices are 'G_NORMAL_MAP', 'G_SATELLITE_MAP', 'G_HYBRID_MAP', 'G_PHYSICAL_MAP', 'MYTOPO_TILES'
+		gv_options.map_opacity = 1;  // number from 0 to 1
+		gv_options.full_screen = true;  // true|false: should the map fill the entire page (or frame)?
+		gv_options.width = 700;  // width of the map, in pixels
+		gv_options.height = 700;  // height of the map, in pixels
+		
+		gv_options.map_div = 'gmap_div';  // the name of the HTML "div" tag containing the map itself; usually 'gmap_div'
+		gv_options.doubleclick_zoom = true;  // true|false: zoom in when mouse is double-clicked?
+		gv_options.mousewheel_zoom = true; // true|false; or 'reverse' for down=in and up=out
+		gv_options.autozoom_adjustment = 0;
+		gv_options.centering_options = { 'open_info_window':true, 'partial_match':true, 'center_key':'center', 'default_zoom':null } // URL-based centering (e.g., ?center=name_of_marker&zoom=14)
+		gv_options.tilt = false; // true|false: allow Google to show 45-degree tilted aerial imagery?
+		gv_options.street_view = (mobile_browser?false:true); // true|false: allow Google Street View on the map
+		gv_options.animated_zoom = false; // true|false: may or may not work properly
+			
+		// widgets on the map:
+		gv_options.zoom_control = 'large'; // 'large'|'small'|'none'
+		gv_options.recenter_button = (mobile_browser?false:true); // true|false: is there a 'double-click to recenter' option in the zoom control?
+		gv_options.scale_control = (mobile_browser?false:true); // true|false
+		gv_options.center_coordinates = true;  // true|false: show a "center coordinates" box and crosshair?
+		gv_options.mouse_coordinates = (mobile_browser?false:true);  // true|false: show a "mouse coordinates" box?
+		gv_options.crosshair_hidden = (mobile_browser?true:true);  // true|false: hide the crosshair initially?
+		gv_options.map_opacity_control = true;  // true|false
+		gv_options.map_type_control = {};  // widget to change the background map
+	 	gv_options.map_type_control.style = 'menu';  // 'menu'|'none'
+		gv_options.map_type_control.filter = false;  // true|false: when map loads, are irrelevant maps ignored?
+		gv_options.map_type_control.custom_order = { 'VFRMAP':99.1, 'EARTHNC_NOAA_CHARTS':99.2, 'GOOGLE_HYBRID_RELIEF':14.1 };
+		gv_options.map_type_control.custom = [
+			{ id:'TOPOSM_HYBRID', menu_name:'TopOSM+G.aerial', description:'OSM data with contours and Google aerial imagery', credit:'Map tiles by <a href="http://stamen.com">Stamen</a> under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OSM</a> under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY-SA</a>.', error_message:'stamen.com tiles unavailable', min_zoom:1, max_zoom:15, bounds:[-180,-90,180,90], bounds_subtract:[], url:['http://tile.stamen.com/toposm-color-relief/{Z}/{X}/{Y}.jpg','http://tile.stamen.com/toposm-contours/{Z}/{X}/{Y}.png','http://tile.stamen.com/toposm-features/{Z}/{X}/{Y}.png'],opacity:[0.25,1,1],background:'GV_AERIAL' }
+			  ,{ id:'USTOPO_HYBRID',menu_name:'USTopo+G.aerial',url:['http://s3-us-west-1.amazonaws.com/ustopo/feature/{Z}/{X}/{Y}.png'],credit:'Topo features from USTopo',min_zoom:7,max_zoom:16,opacity:1.00,background:'GV_AERIAL' }
+		];
+		gv_options.disable_google_pois = false;  // true|false: if you disable clickable POIs, you also lose the labels on parks, airports, etc.
+		gv_options.measurement_tools = (mobile_browser?false:{ visible:false, distance_color:'#0000ff', area_color:'#0000ff', position:['BOTTOM_LEFT',4,70] });
+		gv_options.searchbox_options = {}; // options for a floating address search box
+		gv_options.searchbox_options.enabled = true;  // true|false: enable or disable the search box altogether
+		gv_options.searchbox_options.zoom = true;  // true|false: zoom in on search result?
+		gv_options.searchbox_options.position = (mobile_browser?['BOTTOM_LEFT',2,48]:['TOP_LEFT',74,2]);  // [Google anchor name, relative x, relative y]
+		gv_options.searchbox_options.draggable = true;  // true|false: can it be moved around the screen?
+		gv_options.searchbox_options.collapsible = true;  // true|false: can it be collapsed by double-clicking its top bar?
+
+	</script>
+
+	<script type="text/javascript" src="http://maps.gpsvisualizer.com/google_maps/functions3.js"></script>
+	<script type="text/javascript" src="ajax.js"></script>
+	<script type="text/javascript" src="draw3.js"></script>
+
+	<style type="text/css">
+	/* Put any custom style definitions here (e.g., .gv_marker_info_window, .gv_marker_info_window_name, .gv_marker_list_item, .gv_tooltip, .gv_label, etc.) */
+		.gv_label {
+			filter:alpha(opacity=80); -moz-opacity:0.8; opacity:0.8;
+			background:#333333; border:1px solid black; padding:1px;
+			font:9px Verdana,sans-serif; color:white; font-weight:normal;
+		}
+
+	</style>
+	<!-- end GPSV setup script and styles; begin map-drawing script (they must be separate) -->
+		<script type="text/javascript">
+			function GV_Map() {
+				GV_Setup_Map();
+				GV_Place_Div('gv_sandbox_link',2,40,'BOTTOM_RIGHT');
+				if (mobile_browser) {
+					GV_Build_And_Place_Draggable_Box({base_id:'gv_elements',class_name:'gv_elements',position:['TOP_RIGHT',2,32],draggable:true,collapsible:true});
+					$('gv_elements_list').style.maxHeight = '90px';
+					$('gv_searchbox').style.maxHeight = (document.documentElement.clientHeight < 300) ? (document.documentElement.clientHeight-80)+'px' : '175px';
+					$('gpsvisualizer_home_link').removeAttribute('href'); // to prevent stray clicks
+					// $('sandbox_subtitle').style.display = 'none';
+					$('sandbox_description').style.display = 'none';
+				} else {
+					GV_Build_And_Place_Draggable_Box({base_id:'gv_elements',class_name:'gv_elements',position:['TOP_RIGHT',5,32],draggable:true,collapsible:true});
+				}
+
+				
+				GVS.Initialize(); // start up the Sandbox code
+				
+				GV_Finish_Map();
+			}
+			GV_Map(); // execute the above code
+		</script>
+	</body>
+	</html>
